@@ -1,0 +1,12 @@
+p#notice = notice
+
+p
+  strong Name:
+  = @project.name
+p
+  strong User:
+  = @project.user
+
+=> link_to 'Edit', edit_panel_project_path(@project)
+'|
+=< link_to 'Back', panel_projects_path
