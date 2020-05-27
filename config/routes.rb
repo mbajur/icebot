@@ -1,3 +1,4 @@
+# typed: strict
 Rails.application.routes.draw do
   root to: 'pages#index'
 
@@ -10,4 +11,6 @@ Rails.application.routes.draw do
   namespace :inbox do
     post 'v1/report', to: 'v1#report'
   end
+
+  get '/:namespace/:id', to: 'projects#show'
 end

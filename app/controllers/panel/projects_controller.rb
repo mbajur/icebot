@@ -1,5 +1,7 @@
+# typed: false
 module Panel
   class ProjectsController < ApplicationController
+    before_action :authenticate_user!
     before_action :set_project, only: [:show, :edit, :update, :destroy]
 
     # GET /projects
@@ -16,16 +18,19 @@ module Panel
     # GET /projects/new
     def new
       @project = Project.new
+      authorize @project
     end
 
     # GET /projects/1/edit
     def edit
+      authorize @project
     end
 
     # POST /projects
     # POST /projects.json
     def create
       @project = Project.new(project_params)
+      authorize @project
       @project.user = current_user
 
       if @project.save
@@ -38,6 +43,8 @@ module Panel
     # PATCH/PUT /projects/1
     # PATCH/PUT /projects/1.json
     def update
+      authorize @project
+
       if @project.update(project_params)
         redirect_to [:panel, @project], notice: 'Project was successfully updated.'
       else
@@ -48,6 +55,7 @@ module Panel
     # DELETE /projects/1
     # DELETE /projects/1.json
     def destroy
+      authorize @project
       @project.destroy
       redirect_to panel_projects_url, notice: 'Project was successfully destroyed.'
     end

@@ -1,3 +1,4 @@
+# typed: false
 module Inbox
   class V1Controller < InboxController
     Dry::Schema.load_extensions(:hints)

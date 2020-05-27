@@ -1,3 +1,4 @@
+# typed: false
 class PersistMetricJob < ApplicationJob
   queue_as :default
 

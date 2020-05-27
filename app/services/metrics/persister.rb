@@ -2,6 +2,8 @@
 
 module Metrics
   class Persister
+    extend T::Sig
+
     METRICS_KEYS = [
       'types.input.files.sigil.ignore',
       'types.input.files.sigil.false',
@@ -13,12 +15,14 @@ module Metrics
       'types.input.sends.typed'
     ]
 
+    sig { params(project: Project, payload: Hash).void }
     def initialize(project, payload:)
       @project = project
       @timestamp = Time.at(payload[:timestamp]).to_datetime
       @payload = payload
     end
 
+    sig { returns(Metric) }
     def call
       args = {
         created_at: timestamp.beginning_of_hour,
@@ -37,10 +41,17 @@ module Metrics
     attr_reader :timestamp
     attr_reader :payload
 
+    sig { returns(Hash) }
     def metrics
       @metrics ||= payload[:metrics].each_with_object({}) do |item, hsh|
-        hsh[item[:name]] = item[:value] || 0
+        key = cleanup_key(item[:name])
+        hsh[key] = item[:value] || 0
       end.select { |k| METRICS_KEYS.include?(k) }
+    end
+
+    sig { params(key: String).returns(String) }
+    def cleanup_key(key)
+      key.split('..').last
     end
   end
 end
