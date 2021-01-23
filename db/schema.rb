@@ -1,4 +1,3 @@
-# typed: false
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_26_154559) do
+ActiveRecord::Schema.define(version: 2021_01_23_145421) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
@@ -26,12 +25,28 @@ ActiveRecord::Schema.define(version: 2020_05_26_154559) do
     t.index ["project_id"], name: "index_metrics_on_project_id"
   end
 
+  create_table "oauth_authorizations", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "provider", null: false
+    t.string "uid", null: false
+    t.json "info", default: {}
+    t.json "credentials", default: {}, null: false
+    t.json "extra", default: {}
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_oauth_authorizations_on_user_id"
+  end
+
   create_table "projects", force: :cascade do |t|
     t.string "name"
     t.string "token"
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "full_name", null: false
+    t.string "external_id", null: false
+    t.integer "provider", default: 0, null: false
+    t.index ["external_id"], name: "index_projects_on_external_id"
     t.index ["token"], name: "index_projects_on_token", unique: true
     t.index ["user_id"], name: "index_projects_on_user_id"
   end
@@ -60,5 +75,6 @@ ActiveRecord::Schema.define(version: 2020_05_26_154559) do
   end
 
   add_foreign_key "metrics", "projects"
+  add_foreign_key "oauth_authorizations", "users"
   add_foreign_key "projects", "users"
 end

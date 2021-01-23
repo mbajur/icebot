@@ -8,16 +8,16 @@ table
       th
       th
       th
+      th
 
   tbody
     - @projects.each do |project|
       tr
         td = project.name
         td = project.user
-        td = link_to 'Show', [:panel, project]
-        td = link_to 'Edit', edit_panel_project_path(project)
+        td = link_to 'Show', project_path(*project.full_name.split('/'))
         td = link_to 'Destroy', [:panel, project], data: { confirm: 'Are you sure?' }, method: :delete
 
 br
 
-= link_to 'New Project', new_panel_project_path
+= link_to 'New Project', github_new_panel_project_path

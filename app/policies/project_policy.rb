@@ -1,10 +1,10 @@
 class ProjectPolicy < ApplicationPolicy
-  def new?
+  def new_github?
     true
   end
 
   def create?
-    new
+    new_github?
   end
 
   def edit?

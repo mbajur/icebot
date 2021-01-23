@@ -1,7 +1,7 @@
 # typed: strict
 class ProjectsController < ApplicationController
   def show
-    @project = Project.find(params[:id])
+    @project = Project.find_by!(full_name: [params[:full_name])
     metrics = @project.metrics.group_by_hour(:created_at, series: false)
 
     ignore = metrics.sum("cast(body ->> 'types.input.files.sigil.ignore' as integer)")

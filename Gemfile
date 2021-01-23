@@ -48,9 +48,13 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'devise'
+gem 'omniauth-github'
+gem 'omniauth-rails_csrf_protection'
 gem 'slim-rails'
 gem 'dry-schema'
 gem "chartkick"
 gem 'groupdate'
 gem 'sorbet-runtime'
 gem "pundit"
+gem "figaro"
+gem "octokit", "~> 4.0"

@@ -1,0 +1,14 @@
+h1 New project
+
+= link_to 'Connect github', '/auth/github', method: :post
+
+hr
+
+- @repos.each do |repo|
+  li(data-id=repo.id)
+    strong = repo.full_name
+    = link_to 'Add', panel_projects_path(project: { id: repo.id }), method: :post
+
+hr
+
+= link_to 'Back', panel_projects_path

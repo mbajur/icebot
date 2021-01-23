@@ -5,6 +5,8 @@ class Project < ApplicationRecord
 
   before_save :ensure_token
 
+  enum provider: { github: 0 }
+
   private
 
   def ensure_token

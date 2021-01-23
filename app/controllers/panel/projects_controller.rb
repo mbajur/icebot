@@ -7,7 +7,7 @@ module Panel
     # GET /projects
     # GET /projects.json
     def index
-      @projects = Project.all
+      @projects = current_user.projects
     end
 
     # GET /projects/1
@@ -16,9 +16,22 @@ module Panel
     end
 
     # GET /projects/new
-    def new
+    # def new
+    #   @project = Project.new
+    #   authorize @project
+    # end
+
+    # GET /projects/new
+    def new_github
       @project = Project.new
       authorize @project
+
+      if current_user.oauth_authorizations&.first&.credentials
+        client = Octokit::Client.new(access_token: current_user.oauth_authorizations.first.credentials['token'])
+        @repos = client.repos(type: 'public', sort: :created)
+      else
+        @repos = []
+      end
     end
 
     # GET /projects/1/edit
@@ -29,7 +42,15 @@ module Panel
     # POST /projects
     # POST /projects.json
     def create
-      @project = Project.new(project_params)
+      client = Octokit::Client.new(access_token: current_user.oauth_authorizations.first.credentials['token'])
+      repo = client.repo(project_params[:id].to_i)
+
+      @project = Project.new(
+        name:        repo.name,
+        full_name:   repo.full_name,
+        external_id: repo.id,
+        provider:    :github
+      )
       authorize @project
       @project.user = current_user
 
@@ -69,7 +90,7 @@ module Panel
 
     # Only allow a list of trusted parameters through.
     def project_params
-      params.require(:project).permit(:name)
+      params.require(:project).permit(:id)
     end
   end
 end
