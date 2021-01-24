@@ -2,8 +2,13 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+  devise_modules = [:database_authenticatable,
+                    :recoverable,
+                    :rememberable,
+                    :validatable]
+
+  devise_modules << :registerable if Figaro.env.sign_up_opened == 'true'
+  devise *devise_modules
 
   has_many :oauth_authorizations, dependent: :destroy
   has_many :projects, dependent: :destroy
